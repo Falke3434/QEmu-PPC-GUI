@@ -75,6 +75,10 @@ class QEmuPPCGUI:
         self.bios_pegasos2_entry.grid(row=2, column=1, padx=5, pady=5)
         self.bios_pegasos2_entry.insert(0, self.bios_pegasos2)
 
+        # Add Browse button for Pegasos2 Bios
+        self.bios_pegasos2_browse_button = tk.Button(self.root, text="Browse", command=self.browse_bios_pegasos2)
+        self.bios_pegasos2_browse_button.grid(row=2, column=2, padx=5, pady=5)
+
         # Kernel Options (checkbox and entry)
         self.kernel_enabled_var = tk.BooleanVar()
         self.kernel_checkbox = tk.Checkbutton(self.root, text="Kernel:", variable=self.kernel_enabled_var)
@@ -98,6 +102,10 @@ class QEmuPPCGUI:
         self.bios_amigaone_entry = tk.Entry(self.root, width=40)
         self.bios_amigaone_entry.grid(row=2, column=1, padx=5, pady=5)
         self.bios_amigaone_entry.insert(0, self.bios_amigaone)
+
+        # Add Browse button for AmigaOne Bios
+        self.bios_amigaone_browse_button = tk.Button(self.root, text="Browse", command=self.browse_bios_amigaone)
+        self.bios_amigaone_browse_button.grid(row=2, column=2, padx=5, pady=5)
 
         # Loader1 Options (checkbox and entry)
         self.loader1_enabled_var = tk.BooleanVar()
@@ -201,6 +209,18 @@ class QEmuPPCGUI:
             self.qemu_exe.delete(0, tk.END)
             self.qemu_exe.insert(0, filename)
 
+    def browse_bios_pegasos2(self):
+        filename = filedialog.askopenfilename(filetypes=[("All files", "*.*"), ("BIOS files", "*.rom;*.bin")])
+        if filename:
+            self.bios_pegasos2_entry.delete(0, tk.END)
+            self.bios_pegasos2_entry.insert(0, filename)
+
+    def browse_bios_amigaone(self):
+        filename = filedialog.askopenfilename(filetypes=[("All files", "*.*"), ("BIOS files", "*.rom;*.bin")])
+        if filename:
+            self.bios_amigaone_entry.delete(0, tk.END)
+            self.bios_amigaone_entry.insert(0, filename)
+
     def browse_iso_file(self):
         filename = filedialog.askopenfilename(filetypes=[("ISO files", "*.iso")])
         if filename:
@@ -228,6 +248,7 @@ class QEmuPPCGUI:
             self.kernel_entry.grid(row=3, column=1, padx=5, pady=5)
             self.initrd_checkbox.grid(row=4, column=0, sticky='w', padx=5, pady=5)
             self.initrd_entry.grid(row=4, column=1, padx=5, pady=5)
+            self.bios_pegasos2_browse_button.grid(row=2, column=2, padx=5, pady=5)
         else:
             self.bios_pegasos2_checkbox.grid_remove()
             self.bios_pegasos2_entry.grid_remove()
@@ -235,6 +256,7 @@ class QEmuPPCGUI:
             self.kernel_entry.grid_remove()
             self.initrd_checkbox.grid_remove()
             self.initrd_entry.grid_remove()
+            self.bios_pegasos2_browse_button.grid_remove()
 
         if selected_machine == "amigaone":
             self.bios_amigaone_checkbox.grid(row=2, column=0, sticky='w', padx=5, pady=5)
@@ -243,6 +265,7 @@ class QEmuPPCGUI:
             self.loader1_entry.grid(row=5, column=1, padx=5, pady=5)
             self.loader2_checkbox.grid(row=6, column=0, sticky='w', padx=5, pady=5)
             self.loader2_entry.grid(row=6, column=1, padx=5, pady=5)
+            self.bios_amigaone_browse_button.grid(row=2, column=2, padx=5, pady=5)
         else:
             self.bios_amigaone_checkbox.grid_remove()
             self.bios_amigaone_entry.grid_remove()
@@ -250,6 +273,7 @@ class QEmuPPCGUI:
             self.loader1_entry.grid_remove()
             self.loader2_checkbox.grid_remove()
             self.loader2_entry.grid_remove()
+            self.bios_amigaone_browse_button.grid_remove()
 
     def toggle_cpu_entry(self):
         """Enable or disable the CPU option based on the checkbox."""
