@@ -22,3 +22,5 @@ QEMU PPC GUI is a simple Gui for QEmu writen in Python.
 - AmigaOne + Loader BBoot + 2048 + SM501 + GTK/SDL + ES1370 + RTL8139
 - Sam460ex + 2048 + SM501 + GTK/SDL + ES1370 + RTL8139
 
+## Screenshot:
+![QEmu PPC GUI](https://github.com/user-attachments/assets/4dc7cfd0-bb1e-4ac5-984d-bb1df8220ebc)
