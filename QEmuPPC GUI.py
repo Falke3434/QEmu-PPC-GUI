@@ -7,8 +7,8 @@ import os
 class QEmuPPCGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("QEmu PPC GUI")
-        self.root.geometry("480x640")  # Set window size
+        self.root.title("QEmu PPC GUI v1.0")
+        self.root.geometry("480x670")  # Set window size
 
         self.config_file = "qemu_ppc_config.ini"
         self.options_file = "qemu_ppc_options.ini"
@@ -125,67 +125,72 @@ class QEmuPPCGUI:
         self.cpu_menu.grid(row=7, column=1, padx=5, pady=5)
         self.cpu_menu.config(state=tk.DISABLED)  # Disabled by default
 
+        # RAM Size
+        tk.Label(self.root, text="RAM Size (MB):").grid(row=9, column=0, sticky='w', padx=5, pady=5)
+        self.ram_size = tk.Entry(self.root, width=10)
+        self.ram_size.grid(row=9, column=1, padx=5, pady=5)
+
         # ISO File (optional)
-        tk.Label(self.root, text="ISO File (optional):").grid(row=9, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="ISO File (optional):").grid(row=10, column=0, sticky='w', padx=5, pady=5)
         self.iso_file = tk.Entry(self.root, width=40)
-        self.iso_file.grid(row=9, column=1, padx=5, pady=5)
-        tk.Button(self.root, text="Browse", command=self.browse_iso_file).grid(row=9, column=2, padx=5, pady=5)
+        self.iso_file.grid(row=10, column=1, padx=5, pady=5)
+        tk.Button(self.root, text="Browse", command=self.browse_iso_file).grid(row=10, column=2, padx=5, pady=5)
 
         # Harddisk 1 (optional)
-        tk.Label(self.root, text="Harddisk 1 (optional):").grid(row=10, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Harddisk 1 (optional):").grid(row=11, column=0, sticky='w', padx=5, pady=5)
         self.harddisk1 = tk.Entry(self.root, width=40)
-        self.harddisk1.grid(row=10, column=1, padx=5, pady=5)
-        tk.Button(self.root, text="Browse", command=self.browse_harddisk1).grid(row=10, column=2, padx=5, pady=5)
+        self.harddisk1.grid(row=11, column=1, padx=5, pady=5)
+        tk.Button(self.root, text="Browse", command=self.browse_harddisk1).grid(row=11, column=2, padx=5, pady=5)
 
         # Harddisk 2 (optional)
-        tk.Label(self.root, text="Harddisk 2 (optional):").grid(row=11, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Harddisk 2 (optional):").grid(row=12, column=0, sticky='w', padx=5, pady=5)
         self.harddisk2 = tk.Entry(self.root, width=40)
-        self.harddisk2.grid(row=11, column=1, padx=5, pady=5)
-        tk.Button(self.root, text="Browse", command=self.browse_harddisk2).grid(row=11, column=2, padx=5, pady=5)
+        self.harddisk2.grid(row=12, column=1, padx=5, pady=5)
+        tk.Button(self.root, text="Browse", command=self.browse_harddisk2).grid(row=12, column=2, padx=5, pady=5)
 
         # VGA Device
-        tk.Label(self.root, text="VGA Device:").grid(row=12, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="VGA Device:").grid(row=13, column=0, sticky='w', padx=5, pady=5)
         self.vga_device = tk.StringVar(value="std")
         vga_options = ["std", "none", "cirrus"]
         self.vga_menu = tk.OptionMenu(self.root, self.vga_device, *vga_options)
-        self.vga_menu.grid(row=12, column=1, padx=5, pady=5)
+        self.vga_menu.grid(row=13, column=1, padx=5, pady=5)
 
         # Graphic Device
-        tk.Label(self.root, text="Graphic Device:").grid(row=13, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Graphic Device:").grid(row=14, column=0, sticky='w', padx=5, pady=5)
         self.graphic_device = tk.StringVar(value="sm501")
         graphic_options = ["sm501", "ati-vga", "cirrus-vga", "VGA"]
         self.graphic_menu = tk.OptionMenu(self.root, self.graphic_device, *graphic_options)
-        self.graphic_menu.grid(row=13, column=1, padx=5, pady=5)
+        self.graphic_menu.grid(row=14, column=1, padx=5, pady=5)
 
         # Display
-        tk.Label(self.root, text="Display:").grid(row=14, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Display:").grid(row=15, column=0, sticky='w', padx=5, pady=5)
         self.display = tk.StringVar(value="gtk")
         display_options = ["gtk", "sdl", "egl-headles", "curses", "spice-app", "dbus"]
         self.display_menu = tk.OptionMenu(self.root, self.display, *display_options)
-        self.display_menu.grid(row=14, column=1, padx=5, pady=5)
+        self.display_menu.grid(row=15, column=1, padx=5, pady=5)
 
         # Fullscreen (optional)
-        tk.Label(self.root, text="Fullscreen (optional):").grid(row=15, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Fullscreen (optional):").grid(row=16, column=0, sticky='w', padx=5, pady=5)
         self.fullscreen_var = tk.BooleanVar()
         self.fullscreen_checkbox = tk.Checkbutton(self.root, variable=self.fullscreen_var)
-        self.fullscreen_checkbox.grid(row=15, column=1, sticky='w', padx=5, pady=5)
+        self.fullscreen_checkbox.grid(row=16, column=1, sticky='w', padx=5, pady=5)
 
         # Sound Device
-        tk.Label(self.root, text="Sound Device:").grid(row=16, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Sound Device:").grid(row=17, column=0, sticky='w', padx=5, pady=5)
         self.sound_device = tk.StringVar(value="ac97")
         sound_options = ["ac97", "es1370"]
         self.sound_menu = tk.OptionMenu(self.root, self.sound_device, *sound_options)
-        self.sound_menu.grid(row=16, column=1, padx=5, pady=5)
+        self.sound_menu.grid(row=17, column=1, padx=5, pady=5)
 
         # Network Device
-        tk.Label(self.root, text="Network Device:").grid(row=17, column=0, sticky='w', padx=5, pady=5)
+        tk.Label(self.root, text="Network Device:").grid(row=18, column=0, sticky='w', padx=5, pady=5)
         self.network_device = tk.StringVar(value="rtl8139")
         network_options = ["rtl8139", "e1000", "e1000e", "i82550", "i82551", "ne2k_pci", "sungem"]
         self.network_menu = tk.OptionMenu(self.root, self.network_device, *network_options)
-        self.network_menu.grid(row=17, column=1, padx=5, pady=5)
+        self.network_menu.grid(row=18, column=1, padx=5, pady=5)
 
         # Start QEMU Button
-        tk.Button(self.root, text="Start QEMU", command=self.start_qemu).grid(row=18, column=0, columnspan=3, pady=20)
+        tk.Button(self.root, text="Start QEMU", command=self.start_qemu).grid(row=19, column=0, columnspan=3, pady=20)
 
         # Load machine-specific fields
         self.update_machine_specific_fields()
@@ -277,6 +282,8 @@ class QEmuPPCGUI:
 
         if self.cpu_enabled_var.get() and self.cpu_entry.get():
             command += ["-cpu", self.cpu_entry.get()]
+        if self.ram_size.get():
+            command += ["-m", self.ram_size.get()]
         if self.iso_file.get():
             command += ["-cdrom", self.iso_file.get()]
         if self.harddisk1.get():
@@ -330,6 +337,7 @@ class QEmuPPCGUI:
             'loader2_enabled': str(self.loader2_enabled_var.get()),
             'cpu_enabled': str(self.cpu_enabled_var.get()),
             'cpu': self.cpu_entry.get(),
+            'ram_size': self.ram_size.get(),
             'iso_file': self.iso_file.get(),
             'harddisk1': self.harddisk1.get(),
             'harddisk2': self.harddisk2.get(),
@@ -358,6 +366,7 @@ class QEmuPPCGUI:
             self.loader2_enabled_var.set(config['Settings'].getboolean('loader2_enabled', False))
             self.cpu_enabled_var.set(config['Settings'].getboolean('cpu_enabled', False))
             self.cpu_entry.set(config['Settings'].get('cpu', ''))
+            self.ram_size.insert(0, config['Settings'].get('ram_size', '512'))
             self.iso_file.insert(0, config['Settings'].get('iso_file', ''))
             self.harddisk1.insert(0, config['Settings'].get('harddisk1', ''))
             self.harddisk2.insert(0, config['Settings'].get('harddisk2', ''))
