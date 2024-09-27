@@ -13,6 +13,7 @@ QEMU PPC GUI is a simple Gui for QEmu writen in Python.
 
 ### MorphOS 3.18: 
 - Pegasos 2 + Bios + 1024 + SM501 + GTK + ES1370 + RTL8139 (type in cmd: boot cd boot.img)
+- Pegasos 2 + Bios + 1024 + ATI-VGA (Bios) + GTK + ES1370 + RTL8139 (type in cmd: boot cd boot.img)
 
 ### AmigaOS 4.1 (only with modified Iso):
 - Pegasos 2 + Bios BBoot + 1024 + SM501 + GTK/SDL + ES1370 + RTL8139 (type in cmd: boot cd bootloader_prepare)
@@ -23,4 +24,6 @@ QEMU PPC GUI is a simple Gui for QEmu writen in Python.
 - Sam460ex + 2048 + SM501 + GTK/SDL + ES1370 + RTL8139
 
 ## Screenshot:
-![QEmu PPC GUI](https://github.com/user-attachments/assets/4dc7cfd0-bb1e-4ac5-984d-bb1df8220ebc)
+![sshot-1](https://github.com/user-attachments/assets/a3446cbd-7eec-41c6-a8e2-51d4dce49f51)
+
+
