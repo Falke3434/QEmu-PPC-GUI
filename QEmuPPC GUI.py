@@ -8,7 +8,7 @@ class QEmuPPCGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("QEmu PPC GUI v1.0")
-        self.root.geometry("500x720")  # Set window size
+        self.root.geometry("500x740")  # Set window size
 
         self.config_file = "qemu_ppc_config.ini"
         self.options_file = "qemu_ppc_options.ini"
@@ -160,80 +160,86 @@ class QEmuPPCGUI:
         self.harddisk2.grid(row=12, column=1, padx=5, pady=5)
         tk.Button(self.root, text="Browse", command=self.browse_harddisk2).grid(row=12, column=2, padx=5, pady=5)
 
+        # FAT Drive (optional)
+        tk.Label(self.root, text="FAT Drive (optional):").grid(row=13, column=0, sticky='w', padx=5, pady=5)
+        self.fat_drive = tk.Entry(self.root, width=40)
+        self.fat_drive.grid(row=13, column=1, padx=5, pady=5)
+        tk.Button(self.root, text="Browse", command=self.browse_fat_drive).grid(row=13, column=2, padx=5, pady=5)
+
         # VGA Device
         self.vga_device_enabled_var = tk.BooleanVar(value=True)
         self.vga_device_checkbox = tk.Checkbutton(self.root, text="Enable VGA Device", variable=self.vga_device_enabled_var, command=self.toggle_vga_menu)
-        self.vga_device_checkbox.grid(row=13, column=0, sticky='w', padx=5, pady=5)
+        self.vga_device_checkbox.grid(row=14, column=0, sticky='w', padx=5, pady=5)
 
         self.vga_device = tk.StringVar(value="none")
         vga_options = ["std", "none", "cirrus"]
         self.vga_menu = tk.OptionMenu(self.root, self.vga_device, *vga_options)
-        self.vga_menu.grid(row=13, column=1, padx=5, pady=5)
+        self.vga_menu.grid(row=14, column=1, padx=5, pady=5)
         self.vga_menu.config(state=tk.NORMAL)  # Initially enabled
 
         # Graphic Device
         self.graphic_device_enabled_var = tk.BooleanVar(value=True)
         self.graphic_device_checkbox = tk.Checkbutton(self.root, text="Enable Graphic Device", variable=self.graphic_device_enabled_var, command=self.toggle_graphic_menu)
-        self.graphic_device_checkbox.grid(row=14, column=0, sticky='w', padx=5, pady=5)
+        self.graphic_device_checkbox.grid(row=15, column=0, sticky='w', padx=5, pady=5)
 
         self.graphic_device = tk.StringVar(value="sm501")
         graphic_options = ["sm501", "ati-vga", "cirrus-vga", "VGA"]
         self.graphic_menu = tk.OptionMenu(self.root, self.graphic_device, *graphic_options, command=self.on_graphic_device_change)
-        self.graphic_menu.grid(row=14, column=1, padx=5, pady=5)
+        self.graphic_menu.grid(row=15, column=1, padx=5, pady=5)
         self.graphic_menu.config(state=tk.NORMAL)  # Initially enabled
 
         # Graphic Bios specific (checkbox and entry)
         self.graphic_bios_enabled_var = tk.BooleanVar()
         self.graphic_bios_checkbox = tk.Checkbutton(self.root, text="Graphic Bios:", variable=self.graphic_bios_enabled_var)
-        self.graphic_bios_checkbox.grid(row=15, column=0, sticky='w', padx=5, pady=5)
+        self.graphic_bios_checkbox.grid(row=16, column=0, sticky='w', padx=5, pady=5)
         self.graphic_bios_entry = tk.Entry(self.root, width=40)
-        self.graphic_bios_entry.grid(row=15, column=1, padx=5, pady=5)
+        self.graphic_bios_entry.grid(row=16, column=1, padx=5, pady=5)
         self.graphic_bios_entry.insert(0, self.graphic_bios)
 
         # Add Browse button for Graphic Bios
         self.graphic_bios_browse_button = tk.Button(self.root, text="Browse", command=self.browse_graphic_bios)
-        self.graphic_bios_browse_button.grid(row=15, column=2, padx=5, pady=5)
+        self.graphic_bios_browse_button.grid(row=16, column=2, padx=5, pady=5)
 
         # Display
         self.display_enabled_var = tk.BooleanVar(value=True)
         self.display_checkbox = tk.Checkbutton(self.root, text="Enable Display", variable=self.display_enabled_var, command=self.toggle_display_menu)
-        self.display_checkbox.grid(row=16, column=0, sticky='w', padx=5, pady=5)
+        self.display_checkbox.grid(row=17, column=0, sticky='w', padx=5, pady=5)
 
         self.display = tk.StringVar(value="gtk")
         display_options = ["gtk", "sdl", "egl-headless", "curses", "spice-app", "dbus"]
         self.display_menu = tk.OptionMenu(self.root, self.display, *display_options)
-        self.display_menu.grid(row=16, column=1, padx=5, pady=5)
+        self.display_menu.grid(row=17, column=1, padx=5, pady=5)
         self.display_menu.config(state=tk.NORMAL)  # Initially enabled
 
         # Fullscreen (optional)
         self.fullscreen_var = tk.BooleanVar()
         self.fullscreen_checkbox = tk.Checkbutton(self.root, text="Enable Fullscreen (optional)", variable=self.fullscreen_var)
-        self.fullscreen_checkbox.grid(row=17, column=0, sticky='w', padx=5, pady=5)
+        self.fullscreen_checkbox.grid(row=18, column=0, sticky='w', padx=5, pady=5)
 
         # Sound Device
         self.sound_enabled_var = tk.BooleanVar(value=True)
         self.sound_checkbox = tk.Checkbutton(self.root, text="Enable Sound Device", variable=self.sound_enabled_var, command=self.toggle_sound_menu)
-        self.sound_checkbox.grid(row=18, column=0, sticky='w', padx=5, pady=5)
+        self.sound_checkbox.grid(row=19, column=0, sticky='w', padx=5, pady=5)
 
         self.sound_device = tk.StringVar(value="es1370")
         sound_options = ["ac97", "es1370"]
         self.sound_menu = tk.OptionMenu(self.root, self.sound_device, *sound_options)
-        self.sound_menu.grid(row=18, column=1, padx=5, pady=5)
+        self.sound_menu.grid(row=19, column=1, padx=5, pady=5)
         self.sound_menu.config(state=tk.NORMAL)  # Initially enabled
 
         # Network Device
         self.network_enabled_var = tk.BooleanVar(value=True)
         self.network_checkbox = tk.Checkbutton(self.root, text="Enable Network Device", variable=self.network_enabled_var, command=self.toggle_network_menu)
-        self.network_checkbox.grid(row=19, column=0, sticky='w', padx=5, pady=5)
+        self.network_checkbox.grid(row=20, column=0, sticky='w', padx=5, pady=5)
 
         self.network_device = tk.StringVar(value="rtl8139")
         network_options = ["rtl8139", "e1000", "e1000e", "i82550", "i82551", "ne2k_pci", "sungem"]
         self.network_menu = tk.OptionMenu(self.root, self.network_device, *network_options)
-        self.network_menu.grid(row=19, column=1, padx=5, pady=5)
+        self.network_menu.grid(row=20, column=1, padx=5, pady=5)
         self.network_menu.config(state=tk.NORMAL)  # Initially enabled
 
         # Start QEMU Button
-        tk.Button(self.root, text="Start QEMU", command=self.start_qemu).grid(row=20, column=0, columnspan=3, pady=20)
+        tk.Button(self.root, text="Start QEMU", command=self.start_qemu).grid(row=21, column=0, columnspan=3, pady=20)
 
         # Load machine-specific fields
         self.update_machine_specific_fields()
@@ -276,6 +282,12 @@ class QEmuPPCGUI:
         if filename:
             self.harddisk2.delete(0, tk.END)
             self.harddisk2.insert(0, filename)
+
+    def browse_fat_drive(self):
+        fat_drive_folder = filedialog.askdirectory()
+        if fat_drive_folder:
+            self.fat_drive.delete(0, tk.END)
+            self.fat_drive.insert(0, fat_drive_folder)
 
     def update_machine_specific_fields(self, *args):
         selected_machine = self.machine_type.get()
@@ -322,9 +334,9 @@ class QEmuPPCGUI:
     def on_graphic_device_change(self, *args):
         selected_graphic_device = self.graphic_device.get()
         if selected_graphic_device == "ati-vga":
-            self.graphic_bios_entry.grid(row=15, column=1, padx=5, pady=5)
-            self.graphic_bios_checkbox.grid(row=15, column=0, sticky='w', padx=5, pady=5)
-            self.graphic_bios_browse_button.grid(row=15, column=2, padx=5, pady=5)
+            self.graphic_bios_entry.grid(row=16, column=1, padx=5, pady=5)
+            self.graphic_bios_checkbox.grid(row=16, column=0, sticky='w', padx=5, pady=5)
+            self.graphic_bios_browse_button.grid(row=16, column=2, padx=5, pady=5)
         else:
             self.graphic_bios_entry.grid_remove()
             self.graphic_bios_checkbox.grid_remove()
@@ -404,6 +416,8 @@ class QEmuPPCGUI:
             command += ["-drive", f"file={self.harddisk1.get()},format=raw,index=0,media=disk"]
         if self.harddisk2.get():
             command += ["-drive", f"file={self.harddisk2.get()},format=raw,index=1,media=disk"]
+        if self.fat_drive.get():
+            command += ["-drive", f"file=fat:rw:{self.fat_drive.get()},id=ufat,format=raw,if=none", "-device", "usb-storage,drive=ufat"]
 
         if self.vga_device_enabled_var.get() and self.vga_device.get():
             command += ["-vga", self.vga_device.get()]
@@ -464,6 +478,7 @@ class QEmuPPCGUI:
             'iso_file': self.iso_file.get(),
             'harddisk1': self.harddisk1.get(),
             'harddisk2': self.harddisk2.get(),
+            'fat_drive': self.fat_drive.get(),
             'vga_enabled': str(self.vga_device_enabled_var.get()),
             'vga_device': self.vga_device.get(),
             'graphic_enabled': str(self.graphic_device_enabled_var.get()),
@@ -499,6 +514,7 @@ class QEmuPPCGUI:
             self.iso_file.insert(0, config['Settings'].get('iso_file', ''))
             self.harddisk1.insert(0, config['Settings'].get('harddisk1', ''))
             self.harddisk2.insert(0, config['Settings'].get('harddisk2', ''))
+            self.fat_drive.insert(0, config['Settings'].get('fat_drive', ''))
             self.vga_device_enabled_var.set(config['Settings'].getboolean('vga_enabled', True))
             self.vga_device.set(config['Settings'].get('vga_device', 'none'))
             self.graphic_device_enabled_var.set(config['Settings'].getboolean('graphic_enabled', True))
