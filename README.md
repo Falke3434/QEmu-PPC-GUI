@@ -1,5 +1,4 @@
 # QEMU PPC GUI
-
 QEMU PPC GUI is a simple Gui for QEmu writen in Python.
 
 ## Configurations:
@@ -25,5 +24,21 @@ QEMU PPC GUI is a simple Gui for QEmu writen in Python.
 
 ## Screenshot:
 ![sshot-1](https://github.com/user-attachments/assets/a3446cbd-7eec-41c6-a8e2-51d4dce49f51)
+
+
+# QEmu AmigaOS4 GUI
+
+QEmu AmigaOS4 GUI is a small Gui for QEmu writen in Python.
+
+## Configurations:
+
+### AmigaOS 4.1:
+- Pegasos 2 + BBoot + 2048 + SM501 + SDL + RTL8139
+- AmigaOne + BBoot + 2048 + SM501 + SDL + RTL8139
+- Sam460ex + 2048 + SM501 + SDL + RTL8139
+
+## Screenshot:
+![sshot-1](https://github.com/user-attachments/assets/9544b651-dbf3-449a-83b8-1f45435e1952)
+
 
 
