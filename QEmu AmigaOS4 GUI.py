@@ -103,6 +103,44 @@ def save_config():
     with open(config_file, 'w') as configfile:
         config.write(configfile)
 
+# Function to show the selected configuration details in a new window
+def show_configuration():
+    config = configurations[config_var.get()]
+    details = (
+        f"Configuration: {config_var.get()}\n\n"
+
+        f"Machine: {config['machine']}\n"
+        f"Memory: {config['memory']} MB\n"
+        f"VGA Device: {config['vga']}\n"
+        f"Graphics Device: {config['graphics']}\n"
+        f"Display: {config['display']}\n"
+        f"Network: {config['network1']},{config['network2']}\n"
+        f"Kernel Required: {'Yes' if config['kernel_required'] else 'No'}\n"
+        f"Loader Required: {'Yes' if config['loader_required'] else 'No'}\n"
+        f"USB Storage Enabled: {'Yes' if config['usb_storage'] else 'No'}\n\n"
+
+        f"ISO Path: {iso_var.get()}\n"
+        f"HDD 1 Path: {hdd1_var.get()}\n"
+        f"HDD 2 Path: {hdd2_var.get()}\n"
+        f"BBoot Path: {kernel_var.get() if config['kernel_required'] else 'N/A'}\n"
+        f"Kickstart Path: {initrd_var.get() if config['kernel_required'] else 'N/A'}\n"
+        f"BBoot Path: {loader1_var.get() if config['loader_required'] else 'N/A'}\n"
+        f"Kickstart Path: {loader2_var.get() if config['loader_required'] else 'N/A'}\n"
+        f"QEMU Share Folder: {qemu_share_var.get()}\n\n"
+
+        f"Fullscreen: {'Enabled' if fullscreen_var.get() else 'Disabled'}"
+    )
+
+    # Create a new window to display the details
+    show_window = tk.Toplevel(root)
+    show_window.title("Configuration Details")
+
+    # Display the details in a text widget for better formatting
+    text_widget = tk.Text(show_window, wrap="word", width=65, height=23)
+    text_widget.insert("1.0", details)
+    text_widget.config(state="disabled")  # Make the text read-only
+    text_widget.pack(padx=10, pady=10)
+
 # Function to start QEMU with the selected configuration and files
 def start_qemu():
     config = configurations[config_var.get()]
@@ -338,6 +376,16 @@ class Tooltip:
 root = tk.Tk()
 root.title("QEmu AmigaOS4 GUI")
 
+# Set the Window size to be fixed
+root.resizable(False, False)
+
+#Set App Icon
+root.iconbitmap(r'bb.ico') 
+
+# Add Menu Bar
+menu_bar = tk.Menu(root)
+root.config(menu=menu_bar)
+
 frame = ttk.Frame(root, padding="10")
 frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
 
@@ -351,6 +399,10 @@ config_var.trace("w", update_usb_storage_selection)
 config_menu = ttk.Combobox(frame, textvariable=config_var, values=list(configurations.keys()), state="readonly")
 config_menu.grid(row=0, column=1, columnspan=2)
 
+# Add the Show button to the GUI
+show_button = ttk.Button(frame, text="Show", command=show_configuration)
+show_button.grid(row=0, column=3, padx=(5, 0))
+
 # ISO selection
 iso_label = ttk.Label(frame, text="ISO:")
 iso_label.grid(row=1, column=0, sticky=tk.W)
@@ -359,6 +411,7 @@ iso_entry = ttk.Entry(frame, textvariable=iso_var, width=30)
 iso_entry.grid(row=1, column=1)
 iso_button = ttk.Button(frame, text="Browse", command=select_iso)
 iso_button.grid(row=1, column=2)
+Tooltip(iso_entry, "Select Iso File")
 
 # HDD1 selection
 hdd1_label = ttk.Label(frame, text="HDD 1:")
@@ -370,6 +423,7 @@ hdd1_button = ttk.Button(frame, text="Browse", command=select_hdd1)
 hdd1_button.grid(row=2, column=2)
 hdd1_create_button = ttk.Button(frame, text="Create", command=lambda: create_hdd_image(hdd1_var))
 hdd1_create_button.grid(row=2, column=3)
+Tooltip(hdd1_entry, "Select Image File")
 
 # HDD2 selection
 hdd2_label = ttk.Label(frame, text="HDD 2:")
@@ -381,33 +435,34 @@ hdd2_button = ttk.Button(frame, text="Browse", command=select_hdd2)
 hdd2_button.grid(row=3, column=2)
 hdd2_create_button = ttk.Button(frame, text="Create", command=lambda: create_hdd_image(hdd2_var))
 hdd2_create_button.grid(row=3, column=3)
+Tooltip(hdd2_entry, "Select Image File")
 
 # Kernel input (for Pegasos2)
 kernel_label = ttk.Label(frame, text="BBoot:")
 kernel_var = tk.StringVar()
 kernel_entry = ttk.Entry(frame, textvariable=kernel_var, width=30)
 kernel_button = ttk.Button(frame, text="Browse", command=select_kernel)
-Tooltip(kernel_entry, "Select the BBoot File.")
+Tooltip(kernel_entry, "Select the BBoot File")
 
 # Initrd input (for Pegasos2)
 initrd_label = ttk.Label(frame, text="Kickstart (Pegasos):")
 initrd_var = tk.StringVar()
 initrd_entry = ttk.Entry(frame, textvariable=initrd_var, width=30)
 initrd_button = ttk.Button(frame, text="Browse", command=select_initrd)
-Tooltip(initrd_entry, "Select the Kickstart.zip File for Pegasos2.")
+Tooltip(initrd_entry, "Select the Kickstart.zip File for Pegasos2")
 
 # Loader input for AmigaOne
 loader1_label = ttk.Label(frame, text="BBoot:")
 loader1_var = tk.StringVar()
 loader1_entry = ttk.Entry(frame, textvariable=loader1_var, width=30)
 loader1_button = ttk.Button(frame, text="Browse", command=select_loader1)
-Tooltip(loader1_entry, "Select the BBoot File.")
+Tooltip(loader1_entry, "Select the BBoot File")
 
 loader2_label = ttk.Label(frame, text="Kickstart (AmigaOne):")
 loader2_var = tk.StringVar()
 loader2_entry = ttk.Entry(frame, textvariable=loader2_var, width=30)
 loader2_button = ttk.Button(frame, text="Browse", command=select_loader2)
-Tooltip(loader2_entry, "Select the Kickstart.zip File for AmigaOne.")
+Tooltip(loader2_entry, "Select the Kickstart.zip File for AmigaOne")
 
 # QEMU shared folder selection
 qemu_share_label = ttk.Label(frame, text="QEMU Share Folder:")
@@ -421,10 +476,11 @@ fullscreen_checkbox = ttk.Checkbutton(frame, variable=fullscreen_var)
 fullscreen_checkbox.grid(row=10, column=1, sticky=tk.W)
 fullscreen_label = ttk.Label(frame, text="Fullscreen Enabled/Disabled:")
 fullscreen_label.grid(row=10, column=0, sticky=tk.W)
+Tooltip(fullscreen_checkbox, "Enable or Disable Fullscreen")
 
 # Start button
 start_button = ttk.Button(frame, text="Start QEMU", command=start_qemu)
-start_button.grid(row=12, column=0, columnspan=3, pady=10)
+start_button.grid(row=12, column=0, columnspan=5, pady=10)
 
 # Load previous configuration
 load_config()
