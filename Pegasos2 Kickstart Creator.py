@@ -147,9 +147,6 @@ def create():
 root = tk.Tk()
 root.title("Pegasos2 Kickstart Creator")
 
-#Set App Icon
-root.iconbitmap(r'bb.ico') 
-
 # 7-Zip Auswahl
 seven_zip_label = tk.Label(root, text="7-Zip Executable:")
 seven_zip_label.grid(row=0, column=0, sticky='w', padx=5, pady=5)

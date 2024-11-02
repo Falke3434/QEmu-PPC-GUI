@@ -379,9 +379,6 @@ root.title("QEmu AmigaOS4 GUI")
 # Set the Window size to be fixed
 root.resizable(False, False)
 
-#Set App Icon
-root.iconbitmap(r'bb.ico') 
-
 # Add Menu Bar
 menu_bar = tk.Menu(root)
 root.config(menu=menu_bar)
