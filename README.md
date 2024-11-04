@@ -41,4 +41,10 @@ QEmu AmigaOS4 GUI is a small Gui for QEmu writen in Python.
 ![sshot-1](https://github.com/user-attachments/assets/9544b651-dbf3-449a-83b8-1f45435e1952)
 
 
+# Pegasos2 und AmigaOne Kickstart Creator
+
+## Screenshot:
+![sshot-1](https://github.com/user-attachments/assets/bf8d6f71-3e15-4516-8a90-a1e84843ad66)
+
+
 
