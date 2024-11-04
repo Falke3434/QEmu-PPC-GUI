@@ -376,9 +376,6 @@ class Tooltip:
 root = tk.Tk()
 root.title("QEmu AmigaOS4 GUI")
 
-# Set the Window size to be fixed
-root.resizable(False, False)
-
 # Add Menu Bar
 menu_bar = tk.Menu(root)
 root.config(menu=menu_bar)
