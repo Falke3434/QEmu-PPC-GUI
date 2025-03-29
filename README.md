@@ -1,6 +1,11 @@
 # QEMU PPC GUI
 QEMU PPC GUI is a simple Gui for QEmu writen in Python.
 
+- QEmu: https://qemu.weilnetz.de/w64/
+- BBoot: https://codeberg.org/qmiga/bboot/releases
+
+- AmigaOS 4.1 Final Edition: https://www.amiga-shop.net/Amiga-Software/AmigaOS-Amiga-Betriebssysteme/AmigaOS-4-1-Final-Edition::689.html
+
 ## Configurations:
 
 ### MacOS 9.2.2: 
