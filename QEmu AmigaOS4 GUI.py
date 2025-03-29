@@ -14,8 +14,7 @@ configurations = {
         "display": "sdl",
         "network1": "rtl8139,netdev=net0",
         "network2": "user,id=net0",
-        "kernel_required": False,
-        "loader_required": True,
+        "kernel_required": True,
         "usb_storage": True
     },
     "Pegasos2": {
@@ -27,7 +26,6 @@ configurations = {
         "network1": "rtl8139,netdev=net0",
         "network2": "user,id=net0",
         "kernel_required": True,
-        "loader_required": False,
         "usb_storage": True
     },
     "Sam460ex": {
@@ -39,7 +37,6 @@ configurations = {
         "network1": "rtl8139,netdev=net0",
         "network2": "user,id=net0",
         "kernel_required": False,
-        "loader_required": False,
         "usb_storage": False
     }
 }
@@ -58,8 +55,6 @@ def create_config_file():
             'HDD2': '',
             'Kernel': '',
             'Initrd': '',
-            'Loader1': '',
-            'Loader2': '',
             'QEMU_Share': '',
             'Fullscreen': 'False'
         }
@@ -78,8 +73,6 @@ def load_config():
             hdd2_var.set(config['Settings']['HDD2'])
             kernel_var.set(config['Settings']['Kernel'])
             initrd_var.set(config['Settings']['Initrd'])
-            loader1_var.set(config['Settings']['Loader1'])
-            loader2_var.set(config['Settings']['Loader2'])
             qemu_share_var.set(config['Settings']['QEMU_Share'])
             fullscreen_var.set(config.getboolean('Settings', 'Fullscreen'))
         except KeyError:
@@ -95,8 +88,6 @@ def save_config():
         'HDD2': hdd2_var.get(),
         'Kernel': kernel_var.get(),
         'Initrd': initrd_var.get(),
-        'Loader1': loader1_var.get(),
-        'Loader2': loader2_var.get(),
         'QEMU_Share': qemu_share_var.get(),
         'Fullscreen': fullscreen_var.get()
     }
@@ -116,16 +107,12 @@ def show_configuration():
         f"Display: {config['display']}\n"
         f"Network: {config['network1']},{config['network2']}\n"
         f"Kernel Required: {'Yes' if config['kernel_required'] else 'No'}\n"
-        f"Loader Required: {'Yes' if config['loader_required'] else 'No'}\n"
         f"USB Storage Enabled: {'Yes' if config['usb_storage'] else 'No'}\n\n"
-
         f"ISO Path: {iso_var.get()}\n"
         f"HDD 1 Path: {hdd1_var.get()}\n"
         f"HDD 2 Path: {hdd2_var.get()}\n"
         f"BBoot Path: {kernel_var.get() if config['kernel_required'] else 'N/A'}\n"
         f"Kickstart Path: {initrd_var.get() if config['kernel_required'] else 'N/A'}\n"
-        f"BBoot Path: {loader1_var.get() if config['loader_required'] else 'N/A'}\n"
-        f"Kickstart Path: {loader2_var.get() if config['loader_required'] else 'N/A'}\n"
         f"QEMU Share Folder: {qemu_share_var.get()}\n\n"
 
         f"Fullscreen: {'Enabled' if fullscreen_var.get() else 'Disabled'}"
@@ -184,17 +171,6 @@ def start_qemu():
         if initrd_var.get():
             command.extend(["-initrd", initrd_var.get()])
 
-    # Add loader if required and entered
-    if config["loader_required"]:
-        if loader1_var.get():
-            command.extend(["-device", f"loader,cpu-num=0,file={loader1_var.get()}"])
-        else:
-            messagebox.showwarning("Warning", "Please select a loader file for the selected configuration.")
-            return
-
-        if loader2_var.get():
-            command.extend(["-device", f"loader,addr=0x600000,file={loader2_var.get()}"])
-
     # Add fullscreen option if checked
     if fullscreen_var.get():
         command.append("-full-screen")
@@ -210,6 +186,28 @@ def select_iso():
     file_path = filedialog.askopenfilename(filetypes=[("ISO Files", "*.iso"), ("All Files", "*.*")])
     if file_path:
         iso_var.set(file_path)
+
+# Function to select an Optical Drive *New*
+def select_iso_drive():
+    drives = [f"\\\\.\\{chr(d)}:" for d in range(65, 91) if os.path.exists(f"{chr(d)}:")]
+    if not drives:
+        messagebox.showerror("Error", "No CD/DVD drives found!")
+        return
+
+    drive_window = tk.Toplevel(root)
+    drive_window.title("Select Drive")
+
+    ttk.Label(drive_window, text="Select Optical Drive:").pack(pady=5)
+    
+    selected_drive = tk.StringVar(value=drives[0])
+    drive_menu = ttk.Combobox(drive_window, textvariable=selected_drive, values=drives, state="readonly")
+    drive_menu.pack(pady=5)
+
+    def set_drive():
+        iso_var.set(selected_drive.get())
+        drive_window.destroy()
+
+    ttk.Button(drive_window, text="OK", command=set_drive).pack(pady=5)
 
 # Function to select an HDD file
 def select_hdd1():
@@ -269,29 +267,17 @@ def create_hdd_image(hdd_var):
 
     create_button = ttk.Button(create_window, text="Create", command=create_image)
     create_button.grid(row=3, columnspan=2, pady=10)
-
-# Function to select a kernel file (for Pegasos2)
+# Function to select a kernel file
 def select_kernel():
     file_path = filedialog.askopenfilename(filetypes=[("Kernel Files", "bboot"), ("All Files", "*.*")])
     if file_path:
         kernel_var.set(file_path)
 
-# Function to select an initrd file (for Pegasos2)
+# Function to select an initrd file
 def select_initrd():
     file_path = filedialog.askopenfilename(filetypes=[("Initrd Files", "kickstart.zip"), ("All Files", "*.*")])
     if file_path:
         initrd_var.set(file_path)
-
-# Function to select a loader file for AmigaOne
-def select_loader1():
-    file_path = filedialog.askopenfilename(filetypes=[("Loader Files", "bboot"), ("All Files", "*.*")])
-    if file_path:
-        loader1_var.set(file_path)
-
-def select_loader2():
-    file_path = filedialog.askopenfilename(filetypes=[("Loader Files", "kickstart.zip"), ("All Files", "*.*")])
-    if file_path:
-        loader2_var.set(file_path)
 
 # Function to select the QEMU shared folder
 def select_qemu_share():
@@ -315,23 +301,6 @@ def update_kernel_initrd_fields(*args):
         initrd_label.grid_remove()
         initrd_entry.grid_remove()
         initrd_button.grid_remove()
-
-# Update loader selection fields based on the selected configuration
-def update_loader_selection(*args):
-    if configurations[config_var.get()]["loader_required"]:
-        loader1_label.grid(row=6, column=0, sticky=tk.W)
-        loader1_entry.grid(row=6, column=1)
-        loader1_button.grid(row=6, column=2)
-        loader2_label.grid(row=7, column=0, sticky=tk.W)
-        loader2_entry.grid(row=7, column=1)
-        loader2_button.grid(row=7, column=2)
-    else:
-        loader1_label.grid_remove()
-        loader1_entry.grid_remove()
-        loader1_button.grid_remove()
-        loader2_label.grid_remove()
-        loader2_entry.grid_remove()
-        loader2_button.grid_remove()
 
 def update_usb_storage_selection(*args):
     if configurations[config_var.get()]["usb_storage"]:
@@ -374,7 +343,7 @@ class Tooltip:
 
 # GUI Setup
 root = tk.Tk()
-root.title("QEmu AmigaOS4 GUI")
+root.title("QEmu AmigaOS4 GUI v1.1")
 
 # Add Menu Bar
 menu_bar = tk.Menu(root)
@@ -388,14 +357,13 @@ config_label = ttk.Label(frame, text="Configuration:")
 config_label.grid(row=0, column=0, sticky=tk.W)
 config_var = tk.StringVar(value="Sam460ex")
 config_var.trace("w", update_kernel_initrd_fields)
-config_var.trace("w", update_loader_selection)
 config_var.trace("w", update_usb_storage_selection)
 config_menu = ttk.Combobox(frame, textvariable=config_var, values=list(configurations.keys()), state="readonly")
 config_menu.grid(row=0, column=1, columnspan=2)
 
 # Add the Show button to the GUI
 show_button = ttk.Button(frame, text="Show", command=show_configuration)
-show_button.grid(row=0, column=3, padx=(5, 0))
+show_button.grid(row=0, column=3)
 
 # ISO selection
 iso_label = ttk.Label(frame, text="ISO:")
@@ -403,9 +371,12 @@ iso_label.grid(row=1, column=0, sticky=tk.W)
 iso_var = tk.StringVar()
 iso_entry = ttk.Entry(frame, textvariable=iso_var, width=30)
 iso_entry.grid(row=1, column=1)
-iso_button = ttk.Button(frame, text="Browse", command=select_iso)
+iso_button = ttk.Button(frame, text="Select ISO", command=select_iso)
 iso_button.grid(row=1, column=2)
-Tooltip(iso_entry, "Select Iso File")
+# CD/DVD selection *New*
+iso_drive_button = ttk.Button(frame, text="Select Drive", command=select_iso_drive)
+iso_drive_button.grid(row=1, column=3)
+Tooltip(iso_entry, "Select ISO File or CD-ROM Drive")
 
 # HDD1 selection
 hdd1_label = ttk.Label(frame, text="HDD 1:")
@@ -438,25 +409,12 @@ kernel_entry = ttk.Entry(frame, textvariable=kernel_var, width=30)
 kernel_button = ttk.Button(frame, text="Browse", command=select_kernel)
 Tooltip(kernel_entry, "Select the BBoot File")
 
-# Initrd input (for Pegasos2)
-initrd_label = ttk.Label(frame, text="Kickstart (Pegasos):")
+# Initrd selection
+initrd_label = ttk.Label(frame, text="Kickstart:")
 initrd_var = tk.StringVar()
 initrd_entry = ttk.Entry(frame, textvariable=initrd_var, width=30)
 initrd_button = ttk.Button(frame, text="Browse", command=select_initrd)
-Tooltip(initrd_entry, "Select the Kickstart.zip File for Pegasos2")
-
-# Loader input for AmigaOne
-loader1_label = ttk.Label(frame, text="BBoot:")
-loader1_var = tk.StringVar()
-loader1_entry = ttk.Entry(frame, textvariable=loader1_var, width=30)
-loader1_button = ttk.Button(frame, text="Browse", command=select_loader1)
-Tooltip(loader1_entry, "Select the BBoot File")
-
-loader2_label = ttk.Label(frame, text="Kickstart (AmigaOne):")
-loader2_var = tk.StringVar()
-loader2_entry = ttk.Entry(frame, textvariable=loader2_var, width=30)
-loader2_button = ttk.Button(frame, text="Browse", command=select_loader2)
-Tooltip(loader2_entry, "Select the Kickstart.zip File for AmigaOne")
+Tooltip(initrd_entry, "Select the Kickstart.zip File")
 
 # QEMU shared folder selection
 qemu_share_label = ttk.Label(frame, text="QEMU Share Folder:")
@@ -479,7 +437,6 @@ start_button.grid(row=12, column=0, columnspan=5, pady=10)
 # Load previous configuration
 load_config()
 update_kernel_initrd_fields()
-update_loader_selection()
 update_usb_storage_selection()
 
 root.mainloop()
